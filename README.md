@@ -36,8 +36,7 @@ Make sure you have the GITScm plugin installed.
 
 ## Architecture of the CICD pipeline built:
 
-![alt text](https://github.com/nivashegde/tdc-docker-go-pipeline
-/blob/master/a-image.jpg?raw=true)
+![alt text](https://github.com/nivashegde/tdc-docker-go-pipeline/blob/master/a-image.jpg?raw=true)
 
 
 ## Steps to build CI/CD Pipeline:
