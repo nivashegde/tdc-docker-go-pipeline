@@ -36,19 +36,22 @@ Make sure you have the GITScm plugin installed.
 
 ## Architecture of the CICD pipeline built:
 
-![alt text](https://github.com/nivashegde/tdc-docker-go-pipeline/blob/master/a-image.jpg?raw=true)
+![alt text](https://github.com/nivashegde/tdc-docker-go-pipeline/blob/master/a-image.png?raw=true)
 
 
 ## Steps to build CI/CD Pipeline:
 
 **1. Setting up Jenkins**
-    ● Create a job in Jenkins
-    ● Under source code management tab, add as follows – Repository URL is
-       the code on which you want to automate integration and deployment
 
+● Create a job in Jenkins
+
+● Under source code management tab, add as follows – Repository URL is the code on which you want to automate integration and deployment
 
 ● Under Build Triggers, check “GitHub hook trigger for gitSCM polling”
+
 ● Under Execute shell, enter the below script
+
+```
 **#!/bin/sh
 echo "Generating tag"**
 #Tag of Docker image is stored in dockerversion.txt. We increment it every time
@@ -57,9 +60,6 @@ we create image. Here tag is an integer variable.
 /var/lib/jenkins/workspace/dockerversion.txt
 echo "Building phase!"**
 #Building the docker image using docker build command
-
-
-```
 sudo docker build -t nivashegde01/go-sample-docker:$(cat
 '/var/lib/jenkins/workspace/dockerversion.txt').
 echo "Build complete!"
@@ -81,43 +81,27 @@ have access to different hosts and images can be deployed to different hosts
 using ssh. Also, the service can be scaled to Kubernetes cluster with required
 yaml files and Kubernetes installed.
 ```
+
 **2. Creating webhook in GitHub repository**
-    Go to settings, add webhook, do as follows
-       ● ​Enter Jenkins URL as shown below in Payload URL
-       ● Content type to application/json
-       ● Select “Just the push event”
-    Here is the code –​ ​https://github.com/nivashegde/tdc-docker-go-pipeline
-    It’s a very simple REST controller written in Golang and it includes a Dockerfile.
 
+Go to settings, add webhook, do as follows
+● Enter Jenkins URL as shown below in Payload URL
+● Content type as application/json
+● Select “Just the push event”
+    Code is a very simple REST controller written in Golang and it includes a Dockerfile.
 
-```
 Once there is a change in code, GitHub will send a POST request to this URL -
 http://34.94.248.59:8080/github-webhook/
 http://34.94.248.59:8080/ is the location where Jenkins is running.
-```
-**3. Final step is to push the code**
-    ● Make changes in the code, it should trigger the build as shown –
-       Blue build – Success
-       Red build – Failure
-       Build failure report can be found in Console Output
 
+**3. Final step is to push the code**
+
+● Make changes in the code, it should trigger the build.
 
 ● Once build is successful, you can notice the code will be running in port
-10000 of the same server.
-Also, you can check your image in the Docker Hub repository with tags
+10000 of the same server. Also, you can check your image in the Docker Hub repository with tags
 numbered.
 
-
-```
 Individual images can be pulled using -
 docker pull nivashegde01/go-sample-docker:version_number
 e.g. - docker pull nivashegde01/go-sample-docker:
-```
-## Conclusion
-
-Once the code is pushed or any changes are made to the code, Jenkins picks up the
-code and builds it. Once done, it is deployed in a server & pushed to Docker Hub.
-Developers can immediately see how it’s running in a stage environment and previous
-version images can be picked up from Docker Hub.
-
-
